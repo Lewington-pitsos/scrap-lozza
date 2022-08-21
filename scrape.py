@@ -17,3 +17,15 @@ url = "https://wttpodcast.libsyn.com/page/1/size/100"
 html = get_html_for_url(url)
 links = get_podcast_links(html)
 print(links)
+
+
+def download_links(links):
+
+    for link in links:
+        name = link.split('/')[-1]
+        doc = requests.get(link)
+        with open(name, 'wb') as f:
+            f.write(doc.content)
+            print(f"Saved {name}")
+
+download_links(links)
