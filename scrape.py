@@ -13,14 +13,7 @@ def get_podcast_links(html):
             links.append(link['href'])
     return links
 
-url = "https://wttpodcast.libsyn.com/page/1/size/100"
-html = get_html_for_url(url)
-links = get_podcast_links(html)
-print(links)
-
-
 def download_links(links):
-
     for link in links:
         name = link.split('/')[-1]
         doc = requests.get(link)
@@ -28,4 +21,18 @@ def download_links(links):
             f.write(doc.content)
             print(f"Saved {name}")
 
-download_links(links)
+def generate_urls(n_pages, results_per_page):
+    urls = []
+    for i in range(1, n_pages+1):
+        urls.append(f"https://wttpodcast.libsyn.com/page/{i}/size/{results_per_page}")
+    return urls
+
+def main():
+    urls = generate_urls(13, 25)
+    for i, url in enumerate(urls):
+        print("downloading all podcasts on page", i + 1)
+        html = get_html_for_url(url)
+        links = get_podcast_links(html)
+        download_links(links)
+
+main()
